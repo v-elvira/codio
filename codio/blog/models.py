@@ -34,7 +34,7 @@ class Post(models.Model):
     slug = models.SlugField()
     summary = models.TextField(max_length=500)
     content = models.TextField()
-    tags = models.ManyToManyField(Tag, related_name="posts")
+    tags = models.ManyToManyField(Tag, related_name="posts", blank=True, null=True)
     comments = GenericRelation(Comment)
 
     def __str__(self):

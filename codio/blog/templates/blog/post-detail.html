@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load blog_extras %}
+
+{% block content %}
+<h2>{{ post.title }}</h2>
+<!-- <div class="row"> -->
+{% row %}
+    <!-- <div class="col"> -->
+    {% col %}
+        {% include "blog/post-byline.html" %}
+    <!-- </div> -->
+    {% endcol %}
+<!-- </div> -->
+{% endrow %}
+{% row %}
+    {% col %}
+        {{ post.content|safe }}
+    {% endcol %}
+{% endrow %}
+{% endrow %}
+<p>
+{% row %}
+    {% col %}
+        {% recent_posts post %}
+    {% endcol %}
+{% endrow %}
+
+{% endblock %}
