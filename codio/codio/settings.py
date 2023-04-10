@@ -11,120 +11,146 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from configurations import Configuration
+from configurations import values
+import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+class Dev(Configuration):
+
+    # Build paths inside the project like this: BASE_DIR / 'subdir'.
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+    # Quick-start development settings - unsuitable for production
+    # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_8##=&1g4&*k@r@vifn1t1rjck60t%1t_#3l#j5&*kij$fj894'
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = 'django-insecure-_8##=&1g4&*k@r@vifn1t1rjck60t%1t_#3l#j5&*kij$fj894'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+    # SECURITY WARNING: don't run with debug turned on in production!
+    # DEBUG = True
+    DEBUG = values.BooleanValue(True) # env: DJANGO_DEBUG "no", "n", "false", "0", "" => False
 
-# ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['*']
+    # ALLOWED_HOSTS = []
+    # ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = values.ListValue(["localhost", "0.0.0.0"]) # env: DJANGO_ALLOWED_HOSTS=localhost,0.0.0.0,.codio.io
 
-# Application definition
+    # Application definition
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'blog',
-    'crispy_forms', 
-    'crispy_bootstrap5',
-]
+    INSTALLED_APPS = [
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        'blog',
+        'crispy_forms', 
+        'crispy_bootstrap5',
+    ]
 
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    ]
 
-ROOT_URLCONF = 'codio.urls'
+    ROOT_URLCONF = 'codio.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
+    TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [BASE_DIR / 'templates'],
+            'APP_DIRS': True,
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
         },
-    },
-]
+    ]
 
-WSGI_APPLICATION = 'codio.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+    WSGI_APPLICATION = 'codio.wsgi.application'
 
 
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
+    # Database
+    # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+    # DATABASES = {
+    #     'default': {
+    #         'ENGINE': 'django.db.backends.sqlite3',
+    #         'NAME': BASE_DIR / 'db.sqlite3',
+    #     }
+    # }
+    DATABASES = values.DatabaseURLValue(f"sqlite:///{BASE_DIR}/db.sqlite3") # env: DATABASE_URL 
+    #DATABASE_URL=sqlite:///db.sqlite3 python3 manage.py runserver 0.0.0.0:8000
+    ## postgres://USER:PASSWORD@HOST:PORT/NAME,  sqlite:///PATH
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
+    # DATABASES = {
+    #     "default": dj_database_url.config(default=f"sqlite:///{BASE_DIR}/db.sqlite3"), # env: DATABASE_URL
+    #     "alternative": dj_database_url.config(
+    #         "ALTERNATIVE_DATABASE_URL",                                                # env: ALTERNATIVE_DATABASE_URL
+    #         default=f"sqlite:///{BASE_DIR}/alternative_db.sqlite3",
+    #     ),
+    # }
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
+    # Password validation
+    # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
-STATIC_URL = 'static/'
+    AUTH_PASSWORD_VALIDATORS = [
+        {
+            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        },
+        {
+            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        },
+    ]
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+    # Internationalization
+    # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-# For crispy forms:
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
+    LANGUAGE_CODE = 'en-us'
+
+    # TIME_ZONE = 'UTC'
+    TIME_ZONE = values.Value("UTC")                   # default checks for env: DJANGO_TIME_ZONE
+    # TIME_ZONE = values.Value("UTC", environ_prefix="CODIO") # checks for env: CODIO_TIME_ZONE
+
+    USE_I18N = True
+
+    USE_TZ = True
+
+
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/4.1/howto/static-files/
+
+    STATIC_URL = 'static/'
+
+    # Default primary key field type
+    # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+
+    DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+    # For crispy forms:
+    CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+    CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+class Prod(Dev):
+    DEBUG = False
+    SECRET_KEY = values.SecretValue() # env: DJANGO_SECRET_KEY
+

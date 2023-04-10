@@ -16,6 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# from django.conf import settings
+# print(f"Time zone: {settings.TIME_ZONE}")
+# print(f"DEBUG: {settings.DEBUG}")
+# print(f"SECRET_KEY: {settings.SECRET_KEY}")
+# print(f"ALLOWED_HOSTS: {settings.ALLOWED_HOSTS}")
+# print(f"DATABASES: {settings.DATABASES}")
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls'))
