@@ -5,8 +5,12 @@ from blog.models import Post
 from django.shortcuts import redirect
 from blog.forms import CommentForm
 
+import logging
+logger = logging.getLogger(__name__)
+
 def index(request):
     posts = Post.objects.filter(published_at__lte=timezone.now()).order_by('-published_at')
+    logger.debug("Got %d posts", len(posts))
     return render(request, "blog/index.html", {"posts": posts})
 
 def post_detail(request, slug):
@@ -20,9 +24,27 @@ def post_detail(request, slug):
                 comment.content_object = post
                 comment.creator = request.user
                 comment.save()
+                logger.info("Created comment on Post %d for user %s", post.pk, request.user)
                 return redirect(request.path_info)
         else:
             comment_form = CommentForm()
     else:
         comment_form = None
     return render(request, "blog/post-detail.html", {"post": post, "comment_form": comment_form})
+
+# def logs(request):
+#     import logging
+
+#     logger = logging.getLogger(__name__) # default level is WARNING (and harder)
+
+#     logger.debug("This is a debug message")
+#     logger.info("This is an info message")
+#     logger.warning("This is a warning message")
+#     logger.error("This is an error message")
+#     logger.critical("This is a critical message")
+#     try:
+#         1/0
+#     except:
+#         logger.exception("An exception occured")
+#     logger.log(logging.WARNING, "Current user is %s with email %s", request.user.username, getattr(request.user, "email", '--'))
+#     return render(request, "blog/index.html", {"posts": ""})
