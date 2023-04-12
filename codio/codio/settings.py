@@ -113,7 +113,7 @@ class Dev(Configuration):
 
     # ALLOWED_HOSTS = []
     # ALLOWED_HOSTS = ['*']
-    ALLOWED_HOSTS = values.ListValue(["localhost", "0.0.0.0"]) # env: DJANGO_ALLOWED_HOSTS=localhost,0.0.0.0,.codio.io
+    ALLOWED_HOSTS = values.ListValue(["localhost", "0.0.0.0", "127.0.0.1"]) # env: DJANGO_ALLOWED_HOSTS=localhost,0.0.0.0,.codio.io
 
     # Application definition
 
@@ -200,6 +200,13 @@ class Dev(Configuration):
         },
     ]
 
+
+    PASSWORD_HASHERS = [
+      'django.contrib.auth.hashers.Argon2PasswordHasher',
+      'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+      'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+      'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    ]
 
     # Internationalization
     # https://docs.djangoproject.com/en/4.1/topics/i18n/
