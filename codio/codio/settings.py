@@ -17,6 +17,41 @@ import dj_database_url
 
 class Dev(Configuration):
 
+    # CACHES = {
+    #     "default": {
+    #         "BACKEND": "django.core.cache.backends.memcached.PyMemcacheCache",
+    #         "LOCATION": "127.0.0.1:11211",
+    #     }
+    # }
+
+    # CACHES = {
+    #     "default": {
+    #         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+    #         "LOCATION": "my_cache_table",
+    #     }
+    # }
+
+
+    # CACHES = {
+    #     "default": {
+    #         "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+    #         "LOCATION": "/var/tmp/django_cache", # dir, absolute path, must exist
+    #     }
+    # }
+
+    # CACHES = {  #default cash, inside Python process' memory. Can't be shared across multiple Django instances
+    #     "default": {
+    #         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    #         "LOCATION": "unique-snowflake", # not required, only if multiple local-memory caches
+    #     }
+    # }
+
+    # CACHES = { # doesn't actually cash
+    #     "default": {
+    #         "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    #     }
+    # }
+
     ADMINS = [("Elya", "elya_321@mail.ru"),]
     # ADMINS = SingleNestedTupleValue([("Elya", "elya_321@mail.ru"),])
     # env: DJANGO_ADMINS="Ben Shaw,ben@example.com;Leo Lucio,leo@example.com"
@@ -214,7 +249,7 @@ class Dev(Configuration):
     LANGUAGE_CODE = 'en-us'
 
     # TIME_ZONE = 'UTC'
-    TIME_ZONE = values.Value("UTC")                   # default checks for env: DJANGO_TIME_ZONE
+    TIME_ZONE = values.Value("Europe/Moscow")                 # default checks for env: DJANGO_TIME_ZONE
     # TIME_ZONE = values.Value("UTC", environ_prefix="CODIO") # checks for env: CODIO_TIME_ZONE
 
     USE_I18N = True

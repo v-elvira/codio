@@ -6,9 +6,18 @@ from django.shortcuts import redirect
 from blog.forms import CommentForm
 
 import logging
+from django.views.decorators.cache import cache_page
+# from django.views.decorators.vary import vary_on_headers
+from django.views.decorators.vary import vary_on_cookie
+
 logger = logging.getLogger(__name__)
 
+@cache_page(300)
+# @vary_on_headers("Cookie") # the same as:
+@vary_on_cookie
 def index(request):
+    # from django.http import HttpResponse
+    # return HttpResponse((str(request.user)+str(timezone.localtime(timezone.now()))).encode("ascii"))
     posts = Post.objects.filter(published_at__lte=timezone.now()).order_by('-published_at')
     logger.debug("Got %d posts", len(posts))
     return render(request, "blog/index.html", {"posts": posts})
