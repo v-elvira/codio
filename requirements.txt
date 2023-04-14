@@ -5,4 +5,4 @@ django-configurations==2.4.1
 dj-database-url==1.0.0
 django[argon2]
 pymemcache==4.0.0
-
+django-debug-toolbar

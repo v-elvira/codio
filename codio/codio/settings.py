@@ -150,6 +150,8 @@ class Dev(Configuration):
     # ALLOWED_HOSTS = ['*']
     ALLOWED_HOSTS = values.ListValue(["localhost", "0.0.0.0", "127.0.0.1"]) # env: DJANGO_ALLOWED_HOSTS=localhost,0.0.0.0,.codio.io
 
+    INTERNAL_IPS = ["127.0.0.1"]
+
     # Application definition
 
     INSTALLED_APPS = [
@@ -162,9 +164,11 @@ class Dev(Configuration):
         'blog',
         'crispy_forms', 
         'crispy_bootstrap5',
+        'debug_toolbar',
     ]
 
     MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
         'django.middleware.common.CommonMiddleware',
