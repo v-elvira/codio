@@ -165,6 +165,7 @@ class Dev(Configuration):
         'crispy_forms', 
         'crispy_bootstrap5',
         'debug_toolbar',
+        'codio_auth',
     ]
 
     MIDDLEWARE = [
@@ -274,6 +275,9 @@ class Dev(Configuration):
     # For crispy forms:
     CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
     CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+    # Auth
+    AUTH_USER_MODEL = "codio_auth.User" # default is 'auth.User'
 
 
 class Prod(Dev):

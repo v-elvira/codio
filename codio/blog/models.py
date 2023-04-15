@@ -45,3 +45,13 @@ class Post(models.Model):
             models.Index(fields=["created_at"], name="created_at_idx"),
             models.Index(fields=["published_at"], name="published_at_idx"),
         ]
+
+
+class AuthorProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
+    )
+    bio = models.TextField()
+
+    def __str__(self):
+        return f"{self.__class__.__name__} object for {self.user}"
