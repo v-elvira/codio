@@ -16,6 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+import codio_auth.views
+from django_registration.backends.activation.views import RegistrationView
+from codio_auth.forms import CodioRegistrationForm
+
+
 # from django.conf import settings
 # print(f"Time zone: {settings.TIME_ZONE}")
 # print(f"DEBUG: {settings.DEBUG}")
@@ -25,5 +30,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('blog.urls'))
+    path('accounts/', include("django.contrib.auth.urls")),
+    path("accounts/profile/", codio_auth.views.profile, name="profile"),
+    path('', include('blog.urls')), 
+    path(
+        "accounts/register/",
+        RegistrationView.as_view(form_class=CodioRegistrationForm),
+        name="django_registration_register",
+    ),
+    path("accounts/", include("django_registration.backends.activation.urls")),
 ]

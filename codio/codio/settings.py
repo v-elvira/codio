@@ -279,6 +279,11 @@ class Dev(Configuration):
     # Auth
     AUTH_USER_MODEL = "codio_auth.User" # default is 'auth.User'
 
+    # Two-step activation
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    ACCOUNT_ACTIVATION_DAYS = 7
+    # REGISTRATION_OPEN = False
+
 
 class Prod(Dev):
     DEBUG = False
