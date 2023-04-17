@@ -40,4 +40,5 @@ urlpatterns = [
     ),
     path("accounts/", include("django_registration.backends.activation.urls")),
     path("accounts/", include("allauth.urls")), # should be after 'django.contrib.auth.urls' so that login/ and other common rules are taken from there
+    path("api/v1/", include("blog.api_urls")),
 ]
