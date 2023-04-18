@@ -8,3 +8,4 @@ pymemcache==4.0.0
 django-debug-toolbar
 django-registration
 django-allauth
+djangorestframework
