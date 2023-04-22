@@ -5,8 +5,8 @@ from codio_auth.models import User
 
 class PostSerializer(serializers.ModelSerializer):
     # tags = serializers.PrimaryKeyRelatedField(read_only=True, many=True)
-    # tags = serializers.StringRelatedField(many=True) # shown as string, npossible to write (POST, PUT)
-    tags = serializers.SlugRelatedField(
+    # tags = serializers.StringRelatedField(many=True) # shown as string, impossible to write (POST, PUT)
+    tags = serializers.SlugRelatedField(  # modifyable, error in PUT/POST if Tag.value selected is not unique 
         slug_field="value", many=True, queryset=Tag.objects.all()
         )
     author = serializers.HyperlinkedRelatedField(
