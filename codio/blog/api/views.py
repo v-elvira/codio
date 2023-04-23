@@ -1,6 +1,6 @@
 from rest_framework import generics
 
-from blog.api.serializers import PostSerializer, UserSerializer
+from blog.api.serializers import PostSerializer, UserSerializer, PostDetailSerializer
 from blog.models import Post
 
 # from rest_framework.authentication import TokenAuthentication #SessionAuthentication
@@ -17,10 +17,11 @@ class PostList(generics.ListCreateAPIView):
     serializer_class = PostSerializer
 
 
-class PostDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
+class PostDetail(generics.RetrieveUpdateDestroyAPIView): 
+    permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject] # after adding comment-adding through API they are also forbidden for not author | admins
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    # serializer_class = PostSerializer
+    serializer_class = PostDetailSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):
