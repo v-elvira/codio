@@ -38,11 +38,11 @@ urlpatterns = [
     # ),
 ]
 
-urlpatterns = format_suffix_patterns(urlpatterns) # cause error after re_path(...)
+urlpatterns = format_suffix_patterns(urlpatterns) # causes error after swagger re_path and .json not found after swagger path
 
 
 urlpatterns.extend([
-        re_path(                                            # url pattern with regular expressions
+    re_path(                                            # url pattern with regular expressions
         r"^swagger(?P<format>\.json|\.yaml)$",
         schema_view.without_ui(cache_timeout=0),
         name="schema-json",
