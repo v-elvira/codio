@@ -1,7 +1,7 @@
 from rest_framework import generics
 
-from blog.api.serializers import PostSerializer, UserSerializer, PostDetailSerializer
-from blog.models import Post
+from blog.api.serializers import PostSerializer, UserSerializer, PostDetailSerializer, TagSerializer
+from blog.models import Post, Tag
 
 # from rest_framework.authentication import TokenAuthentication #SessionAuthentication
 from rest_framework.permissions import IsAdminUser
@@ -9,27 +9,65 @@ from blog.api.permissions import AuthorModifyOrReadOnly, IsAdminUserForObject
 
 from codio_auth.models import User
 
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
-class PostList(generics.ListCreateAPIView):
-    # authentication_classes = [TokenAuthentication]
-    # permission_classes = [IsAdminUser]
+# # VeiwSets, ModelViewSets:
+
+# class TagViewSet(viewsets.ViewSet):
+#     def list(self, request):
+#         queryset = Tag.objects.all()
+#         serializer = TagSerializer(queryset, many=True)
+#         return Response(serializer.data) # rest_framework.response.Response
+
+class TagViewSet(viewsets.ModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+
+    # to select posts with a selected tag:
+    # generated path will be /api/v1/tags/<pk>/posts/ (the name of the method being appended to the detail URL for a Tag). 
+    # path can be set in url_path parameter; url_name in url_name (default tag-posts); in name - name in GUI Extra Actions menu
+    @action(methods=["get"], detail=True, name="Posts with the Tag")  # @action => URL would be set up
+    def posts(self, request, pk=None):
+        tag = self.get_object()  # ModelViewSet.get_object() helper method to fetch by pk
+        post_serializer = PostSerializer(
+            tag.posts, many=True, context={"request": request} # request is used there in HyperlinkRelatedField creation
+        )
+        return Response(post_serializer.data)
+
+
+class PostViewSet(viewsets.ModelViewSet):
+    permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
 
-    ## check for logging: request.user.is_anonymous (!) or ...is_authenticated
-    ## User is not None, is_anonymous not shown in __dict__ (django.utils.functional.SimpleLazyObject: User or AnonymousUser)
+    def get_serializer_class(self):
+        if self.action in ("list", "create"):
+            return PostSerializer
+        return PostDetailSerializer
+
+# end ViewSets
+
+# class PostList(generics.ListCreateAPIView): # replaced by PostViewSet
+#     # authentication_classes = [TokenAuthentication]
+#     # permission_classes = [IsAdminUser]
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+
+#     ## check for logging: request.user.is_anonymous (!) or ...is_authenticated
+#     ## User is not None, is_anonymous not shown in __dict__ (django.utils.functional.SimpleLazyObject: User or AnonymousUser)
     
-    # def get(self, request, *args, **kwargs):
-    #     print(request.user, request.user is None, type(request.user), "anon: ", request.user.is_anonymous, "auth: ", request.user.is_authenticated) 
-    #     #request.user.email => error for anonymous
-    #     return super().get(request, *args, **kwargs)
+#     # def get(self, request, *args, **kwargs):
+#     #     print(request.user, request.user is None, type(request.user), "anon: ", request.user.is_anonymous, "auth: ", request.user.is_authenticated) 
+#     #     #request.user.email => error for anonymous
+#     #     return super().get(request, *args, **kwargs)
 
 
-class PostDetail(generics.RetrieveUpdateDestroyAPIView): 
-    permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject] # after adding comment-adding through API they are also forbidden for not author | admins
-    queryset = Post.objects.all()
-    # serializer_class = PostSerializer
-    serializer_class = PostDetailSerializer
+# class PostDetail(generics.RetrieveUpdateDestroyAPIView):   # replaced by PostViewSet
+#     permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject] # after adding comment-adding through API they are also forbidden for not author | admins
+#     queryset = Post.objects.all()
+#     # serializer_class = PostSerializer
+#     serializer_class = PostDetailSerializer
 
 
 class UserDetail(generics.RetrieveAPIView):

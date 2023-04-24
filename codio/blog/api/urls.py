@@ -1,12 +1,14 @@
 from django.urls import path, include, re_path
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from blog.api.views import PostList, PostDetail, UserDetail
+from blog.api.views import UserDetail, TagViewSet, PostViewSet #, PostList, PostDetail
 from rest_framework.authtoken import views
 
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 # import os
+
+from rest_framework.routers import DefaultRouter
 
 # Settings for drf_yasg swagger generator
 schema_view = get_schema_view(
@@ -20,9 +22,29 @@ schema_view = get_schema_view(
 )
 
 
+# ViewSets withot Routing:
+# tag_list = TagViewSet.as_view({
+#     "get": "list",
+#     "post": "create"
+# })
+
+# tag_detail = TagViewSet.as_view({
+#     "get": "retrieve",
+#     "put": "update",
+#     "patch": "partial_update",
+#     "delete": "destroy"
+# })
+
+# with Routing:
+router = DefaultRouter()
+router.register("tags", TagViewSet) # "tags" will be used as initial component of the path. Can register other prefixes
+router.register("posts", PostViewSet) #, basename = api_post (_detail, how to - _ ?) Or views names will be post-detail, post-list,...
+
 urlpatterns = [
-    path("posts/", PostList.as_view(), name="api_post_list"),
-    path("posts/<int:pk>", PostDetail.as_view(), name="api_post_detail"),
+    # path("", include(router.urls)), # error with format_suffix_patterns. DefaultRouter provides format routes (.json) by its own
+
+    # path("posts/", PostList.as_view(), name="api_post_list"),             # replaced with router
+    # path("posts/<int:pk>", PostDetail.as_view(), name="api_post_detail"), # replaced with router
     path("auth/", include("rest_framework.urls")),
     path("token-auth/", views.obtain_auth_token),
     path("users/<str:email>", UserDetail.as_view(), name="api_user_detail"),
@@ -36,6 +58,9 @@ urlpatterns = [
     #     schema_view.with_ui("swagger", cache_timeout=0),
     #     name="schema-swagger-ui",
     # ),
+    
+    # path("tags/", tag_list, name="tag_list"),
+    # path("tags/<int:pk>/", tag_detail, name="tag_detail"),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns) # causes error after swagger re_path and .json not found after swagger path
@@ -52,4 +77,5 @@ urlpatterns.extend([
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
+    path("", include(router.urls)),
     ])
