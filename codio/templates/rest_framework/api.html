@@ -1,0 +1,16 @@
+{% extends "rest_framework/base.html" %}
+{% block title %}{% if name %}{{ name }} – {% endif %} Codio Blog REST API{% endblock %}
+{% block branding %}
+    <a href="/" class="navbar-brand">
+        Codio Blog REST API
+    </a>
+{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    <style>
+        div .navbar {
+            border-top-color: #1E90FF;
+        }
+    </style>
+{% endblock %}

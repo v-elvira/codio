@@ -16,6 +16,14 @@ class PostList(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
+    ## check for logging: request.user.is_anonymous (!) or ...is_authenticated
+    ## User is not None, is_anonymous not shown in __dict__ (django.utils.functional.SimpleLazyObject: User or AnonymousUser)
+    
+    # def get(self, request, *args, **kwargs):
+    #     print(request.user, request.user is None, type(request.user), "anon: ", request.user.is_anonymous, "auth: ", request.user.is_authenticated) 
+    #     #request.user.email => error for anonymous
+    #     return super().get(request, *args, **kwargs)
+
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView): 
     permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject] # after adding comment-adding through API they are also forbidden for not author | admins
