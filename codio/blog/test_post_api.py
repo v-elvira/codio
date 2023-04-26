@@ -46,6 +46,12 @@ class PostApiTestCase(TestCase):
         token = Token.objects.create(user=self.u1)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
 
+        # token = "4510a3fdd351d2a35059e9724fa4bdbb643f4325cd8f6696298f80efbaf4d2c9"
+        # auth_header = "Token " + token
+        # client.credentials(HTTP_AUTHORIZATION=auth_header)
+
+
+
 
     def test_post_list(self):
         resp = self.client.get("/api/v1/posts/")
@@ -103,4 +109,32 @@ class PostApiTestCase(TestCase):
         self.assertEqual(post.content, post_dict["content"])
         self.assertEqual(post.author, self.u1)
         self.assertEqual(post.published_at, datetime(2021, 1, 10, 9, 0, 0, tzinfo=UTC))
+
+
+
+# # SessionAuthentication example:
+# class PostApiTestCase(TestCase):
+#     def setUp(self):
+#         self.client.login(email="test@example.com", password="test@example.com")
+
+#     def test_post_creation_unauthorized(self):
+#         # log out to test response on unauthorized clients
+#         self.client.logout()
+#         resp = self.client.post("/api/v1/posts/", {"content": "smth"})
+#         self.assertEqual(resp.status_code, 401)
+
+
+# # Basic authorization example:
+# import base64
+# class PostApiTestCase(TestCase):
+#     def setUp(self):
+#         credentials = base64.b64encode("test@example.com:password".encode("ascii"))
+#         auth_header = "Basic " + credentials.decode("ascii")
+#         self.client.credentials(HTTP_AUTHORIZATION=auth_header)
+
+
+
+
+
+
 
