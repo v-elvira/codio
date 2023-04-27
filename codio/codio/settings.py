@@ -310,6 +310,27 @@ class Dev(Configuration):
             # "rest_framework.permissions.IsAuthenticated", #default: AllowAny
             "rest_framework.permissions.IsAuthenticatedOrReadOnly",
         ],
+        "DEFAULT_THROTTLE_CLASSES": [
+            # "rest_framework.throttling.AnonRateThrottle", # defined in rest_framework.throttling 
+            # "rest_framework.throttling.UserRateThrottle"  # defined in rest_framework.throttling
+
+            "blog.api.throttling.AnonSustainedThrottle",    # our classes, inherit from above
+            "blog.api.throttling.AnonBurstThrottle",
+            "blog.api.throttling.UserSustainedThrottle",
+            "blog.api.throttling.UserBurstThrottle",
+
+        ],
+        "DEFAULT_THROTTLE_RATES": {
+            # "anon": "500/day",          # <n>/<period> (second, minute, hour, day)
+            # "user": "2000/day",          # scope = 'anon' ('user') are defined attributes of classes AnonRateThrottle and UserRateThrottle 
+            
+            "anon_sustained": "500/day",    # scopes we defined in our classes, inherited from AnonRateThrottle and UserRateThrottle
+            "anon_burst": "10/minute",
+            "user_sustained": "5000/day",
+            "user_burst": "100/minute",
+
+            # "post_api": "50/minute",    # Scoped throttle (class ScopedRateThrottle), set in veiws. Independent from not scoped throttle, not counted in each other
+        }
     }
 
     SWAGGER_SETTINGS = {

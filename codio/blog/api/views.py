@@ -21,6 +21,8 @@ from django.views.decorators.vary import vary_on_headers, vary_on_cookie
 
 from rest_framework.exceptions import PermissionDenied
 
+# from rest_framework.throttling import ScopedRateThrottle
+
 # # VeiwSets, ModelViewSets:
 
 # class TagViewSet(viewsets.ViewSet):
@@ -54,6 +56,9 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    # throttle_classes = [ScopedRateThrottle] # rest_framework.throttling 
+    # throttle_scope = "post_api"             # settings.py
+    
     permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
     queryset = Post.objects.all()
 
