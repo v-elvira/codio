@@ -68,6 +68,8 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
 
     def get_queryset(self):
+        # self.request.query_params to access and use in filtering (?param=week) instead of /week/
+
         if self.request.user.is_anonymous:
             # published only
             queryset = self.queryset.filter(published_at__lte=timezone.now())
