@@ -78,4 +78,9 @@ urlpatterns.extend([
         name="schema-swagger-ui",
     ),
     path("", include(router.urls)),
+    path(
+        "posts/by-time/<str:period_name>/",       # "posts/<int:pk>/by-time/<str:period_name>/",
+        PostViewSet.as_view({"get": "list"}),     # PostViewSet.as_view({"get": "retrieve"}),
+        name="posts-by-time",
+    ),
     ])
