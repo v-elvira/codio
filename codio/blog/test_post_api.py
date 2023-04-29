@@ -55,7 +55,7 @@ class PostApiTestCase(TestCase):
 
     def test_post_list(self):
         resp = self.client.get("/api/v1/posts/")
-        data = resp.json()
+        data = resp.json()["results"] # with pagination former content is in "results" now. Error if page_size set less than 2
         self.assertEqual(len(data), 2)
 
         for post_dict in data:

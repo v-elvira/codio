@@ -28,6 +28,8 @@ from django.utils import timezone
 from datetime import timedelta
 from django.http import Http404
 
+# from rest_framework.pagination import PageNumberPagination
+
 # # VeiwSets, ModelViewSets:
 
 # class TagViewSet(viewsets.ViewSet):
@@ -46,6 +48,15 @@ class TagViewSet(viewsets.ModelViewSet):
     @action(methods=["get"], detail=True, name="Posts with the Tag")  # @action => URL would be set up
     def posts(self, request, pk=None):
         tag = self.get_object()  # ModelViewSet.get_object() helper method to fetch by pk
+
+        # page = self.paginate_queryset(tag.posts) # TypeError: 'ManyRelatedManager' object is not subscriptable
+        page = self.paginate_queryset(tag.posts.all())
+        if page is not None:
+            post_serializer = PostSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(post_serializer.data)
+
         post_serializer = PostSerializer(
             tag.posts, many=True, context={"request": request} # request is used there in HyperlinkRelatedField creation
         )
@@ -61,6 +72,9 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
+
+    # pagination_class = PageNumberPagination # page_size from settings.py PAGE_SIZE (default None) or override in subclass
+
     # throttle_classes = [ScopedRateThrottle] # rest_framework.throttling 
     # throttle_scope = "post_api"             # settings.py
 
@@ -118,7 +132,13 @@ class PostViewSet(viewsets.ModelViewSet):
         if request.user.is_anonymous:
             raise PermissionDenied("You must be logged in to see which Posts are yours")
         posts = self.get_queryset().filter(author=request.user)
-        serializer = PostSerializer(posts, many=True, context={"request": request})
+
+        page = self.paginate_queryset(posts)
+        if page is not None:
+            serializer = PostSerializer(page, many=True, context={"request": request})
+            return self.get_paginated_response(serializer.data)
+
+        serializer = PostSerializer(posts, many=True, context={"request": request}) # if pagination is turned off in settings => page=None => ordinary response
         return Response(serializer.data)
 
     @method_decorator(cache_page(1))

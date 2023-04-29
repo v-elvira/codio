@@ -325,12 +325,17 @@ class Dev(Configuration):
             # "user": "2000/day",          # scope = 'anon' ('user') are defined attributes of classes AnonRateThrottle and UserRateThrottle 
             
             "anon_sustained": "500/day",    # scopes we defined in our classes, inherited from AnonRateThrottle and UserRateThrottle
-            "anon_burst": "10/minute",
+            "anon_burst": "50/minute",
             "user_sustained": "5000/day",
             "user_burst": "100/minute",
 
             # "post_api": "50/minute",    # Scoped throttle (class ScopedRateThrottle), set in veiws. Independent from not scoped throttle, not counted in each other
-        }
+        },
+        
+        "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination", # globally
+        # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+        # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.CursorPagination", # default: try to sort by 'created' field (or error) 
+        "PAGE_SIZE": 4,
     }
 
     SWAGGER_SETTINGS = {
