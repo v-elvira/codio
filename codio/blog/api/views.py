@@ -29,7 +29,8 @@ from datetime import timedelta
 from django.http import Http404
 
 # from rest_framework.pagination import PageNumberPagination
-
+# import django_filters.rest_framework # if want to set filter_backends here (instead of settings.py)
+from blog.api.filters import PostFilterSet
 # # VeiwSets, ModelViewSets:
 
 # class TagViewSet(viewsets.ViewSet):
@@ -72,6 +73,10 @@ class TagViewSet(viewsets.ModelViewSet):
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    # filter_backends = [django_filters.rest_framework.DjangoFilterBackend] # or globally in settings.py
+    filterset_fields = ["author", "tags"] # "author__email" ok (model field, equality). "published_at__gte" needs filterset_class
+    filterset_class = PostFilterSet       # if use custom filter settings, subclassing FilterSet
+    ordering_fields = ["published_at", "author", "title", "slug"]
 
     # pagination_class = PageNumberPagination # page_size from settings.py PAGE_SIZE (default None) or override in subclass
 

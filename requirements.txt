@@ -10,3 +10,4 @@ django-registration
 django-allauth
 djangorestframework
 drf_yasg
+django-filter

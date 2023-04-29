@@ -174,6 +174,7 @@ class Dev(Configuration):
         'rest_framework',
         'rest_framework.authtoken',
         'drf_yasg',
+        'django_filters',
     ]
 
     MIDDLEWARE = [
@@ -336,6 +337,11 @@ class Dev(Configuration):
         # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
         # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.CursorPagination", # default: try to sort by 'created' field (or error) 
         "PAGE_SIZE": 4,
+
+        "DEFAULT_FILTER_BACKENDS": [
+            "django_filters.rest_framework.DjangoFilterBackend",
+            "rest_framework.filters.OrderingFilter" # for ordering. By default, all readable serialized fields will be available for ordering
+        ],
     }
 
     SWAGGER_SETTINGS = {
