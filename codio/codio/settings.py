@@ -14,6 +14,7 @@ from pathlib import Path
 from configurations import Configuration
 from configurations import values
 import dj_database_url
+from datetime import timedelta
 
 class Dev(Configuration):
 
@@ -306,6 +307,7 @@ class Dev(Configuration):
             "rest_framework.authentication.BasicAuthentication",
             "rest_framework.authentication.SessionAuthentication",
             "rest_framework.authentication.TokenAuthentication",
+            "rest_framework_simplejwt.authentication.JWTAuthentication",
         ], 
         "DEFAULT_PERMISSION_CLASSES": [
             # "rest_framework.permissions.IsAuthenticated", #default: AllowAny
@@ -350,6 +352,13 @@ class Dev(Configuration):
             "Basic": {"type": "basic"},
         }
     }
+
+    SIMPLE_JWT = {
+        "ACCESS_TOKEN_LIFETIME": timedelta(days=1),   # Default is timedelta(minutes=5)
+        "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # Default is timedelta(days=1)
+        # "SIGNING_KEY": "mykey"                        # Deafult is Django SECRET_KEY
+    }
+
 
 
 class Prod(Dev):
