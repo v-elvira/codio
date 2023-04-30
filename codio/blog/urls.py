@@ -14,6 +14,7 @@ urlpatterns = [
     path("post/<slug>/", blog.views.post_detail, name="blog-post-detail"),
     path("bootstr",  TemplateView.as_view(template_name='bootstr.html')),
     path("ip/", blog.views.get_ip),
+    path("post-table/", blog.views.post_table, name="blog-post-table"),
 ]
 
 if settings.DEBUG:
