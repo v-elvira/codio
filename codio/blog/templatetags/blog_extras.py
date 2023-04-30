@@ -15,8 +15,9 @@ register = template.Library()
 
 @register.filter
 def author_details(author, current_user=None):
-	if not isinstance(author, User):
-		return ''
+
+	# if not isinstance(author, User):				 # settings.AUTH_USER_MODEL changed to codio_auth.User
+	# 	return ''
 
 	if author == current_user:
 		return format_html("<strong>me</strong>")

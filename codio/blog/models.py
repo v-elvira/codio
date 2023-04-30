@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericRelation
 
+from versatileimagefield.fields import VersatileImageField, PPOIField
 
 class Comment(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -39,6 +40,15 @@ class Post(models.Model):
     content = models.TextField()
     tags = models.ManyToManyField(Tag, related_name="posts", blank=True, null=True)
     comments = GenericRelation(Comment)
+
+    # hero_image = models.ImageField(
+    hero_image =  VersatileImageField(
+        upload_to="hero_images",        # directory for automatically uploading
+        ppoi_field="ppoi",              # name of PPOIField (versatileimagefield.fields.PPOIField, Primary Point of Interest) in the model
+        null=True, blank=True
+    )
+    ppoi = PPOIField(null=True, blank=True)
+
 
     def __str__(self):
         return self.title

@@ -176,6 +176,7 @@ class Dev(Configuration):
         'rest_framework.authtoken',
         'drf_yasg',
         'django_filters',
+        'versatileimagefield',
     ]
 
     MIDDLEWARE = [
@@ -358,6 +359,9 @@ class Dev(Configuration):
         "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # Default is timedelta(days=1)
         # "SIGNING_KEY": "mykey"                        # Deafult is Django SECRET_KEY
     }
+
+    MEDIA_ROOT = BASE_DIR / "media"    # defines where uploaded files are saved
+    MEDIA_URL = "/media/"              # defines URL/path to serve media from
 
 
 

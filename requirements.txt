@@ -13,3 +13,4 @@ drf_yasg
 django-filter
 djangorestframework-simplejwt[crypto]
 PyJWT
+django-versatileimagefield

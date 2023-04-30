@@ -2,6 +2,7 @@ from rest_framework import serializers
 from blog.models import Post, Tag, Comment
 from codio_auth.models import User
 
+from versatileimagefield.serializers import VersatileImageFieldSerializer
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,15 +44,32 @@ class PostSerializer(serializers.ModelSerializer):
     author = serializers.HyperlinkedRelatedField(
         queryset=User.objects.all(), view_name="api_user_detail", lookup_field="email"
         )
+    hero_image = VersatileImageFieldSerializer(
+        sizes=[
+            ("full_size", "url"),                   # not generated, exists
+            ("thumbnail", "thumbnail__100x100"),    # will be generated (if haven't yet) in serialization process
+        ],
+        read_only=True,
+    )
 
     class Meta:
         model = Post
-        fields = "__all__"
+        # fields = "__all__"
+        exclude = ["ppoi"]
         readonly = ["modified_at", "created_at"]
 
 
 class PostDetailSerializer(PostSerializer):
     comments = CommentSerializer(many=True)
+
+    hero_image = VersatileImageFieldSerializer(
+        sizes=[
+            ("full_size", "url"),
+            ("thumbnail", "thumbnail__100x100"),
+            ("square_crop", "crop__200x200"),
+        ],
+        read_only=True,
+    )
 
     def update(self, instance, validated_data):
         comments = validated_data.pop("comments")
@@ -72,5 +90,5 @@ class PostDetailSerializer(PostSerializer):
     # for comments to be after all (can be done in another way?):
     class Meta:
         model = Post
-        fields = ["id", "title", "author", "tags", "slug", "summary", "content", "created_at", "modified_at", "published_at", "comments"] # ordering
+        fields = ["id", "title", "author", "tags", "slug", "summary", "hero_image", "content", "created_at", "modified_at", "published_at", "comments"] # ordering
 
