@@ -7,6 +7,8 @@ class ClickButton extends React.Component {
     this.setState(
       {wasClicked: true}
     )
+    // this.state.wasClicked = true // no setState => no call for render() method. Nothing change on the page
+    // console.log(this.state)
   }
 
   render () {
@@ -17,7 +19,7 @@ class ClickButton extends React.Component {
     else
       buttonText = 'Click Me'
 
-    return React.createElement(   //(element name, object (dict) of properties, children (string or array) )
+    return React.createElement(   //(element name or child Component, object (=dict) of properties, children (string or array) )
       'button',
       {
         className: 'btn btn-primary mt-2',
