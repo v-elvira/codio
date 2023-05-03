@@ -11,5 +11,22 @@
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>                 <!-- babel for JSX (not best for production this way) -->
     <!-- <script src="{% static 'blog/blog.js' %}"></script> -->
+    <script>
+        const postListUrl = '{{ post_list_url|escapejs }}'
+    </script>
     <script type="text/babel" src="{% static 'blog/blog.js' %}"></script>
 {% endblock %}
+
+
+
+
+<!-- {{ config|json_script:"config-data" }} [for Python dicrtionary. For {"url": "/api/v1/posts/"} the output would be:] -->
+<!-- <script id="config-data" type="application/json">{"url": "/api/v1/posts/"}</script> -->
+
+<!-- // Then to parse the data back out: -->
+<!-- const configElement = document.getElementById('config-data') -->
+<!-- const encodedConfig = configElement.textContent -->
+<!-- const config = JSON.parse(encodedConfig) -->
+
+<!-- // use values from the config object -->
+<!-- const url = config.url -->

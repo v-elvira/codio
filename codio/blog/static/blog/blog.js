@@ -24,25 +24,52 @@ class PostRow extends React.Component {
 }
 
 class PostTable extends React.Component {
+  // state = {
+  //   dataLoaded: true,
+  //   data: {
+  //     results: [
+  //       {
+  //         id: 15,
+  //         tags: [
+  //           'django', 'react'
+  //         ],
+  //         'hero_image': {
+  //           'thumbnail': '/media/__sized__/hero_images/1113037_800-thumbnail-100x100-70.jpg',
+  //           'full_size': '/media/hero_images/1113037_800.jpg'
+  //         },
+  //         title: 'Test Post',
+  //         slug: 'test-post',
+  //         summary: 'A test post, created for Django/React.'
+  //       }
+  //     ]
+  //   }
+  // }
   state = {
-    dataLoaded: true,
-    data: {
-      results: [
-        {
-          id: 15,
-          tags: [
-            'django', 'react'
-          ],
-          'hero_image': {
-            'thumbnail': '/media/__sized__/hero_images/1113037_800-thumbnail-100x100-70.jpg',
-            'full_size': '/media/hero_images/1113037_800.jpg'
-          },
-          title: 'Test Post',
-          slug: 'test-post',
-          summary: 'A test post, created for Django/React.'
+    dataLoaded: false,
+    data: null
+  }
+
+  componentDidMount () {
+    fetch(this.props.url).then(response => {
+      if (response.status !== 200) {
+        throw new Error('Invalid status from server: ' + response.statusText)
+      }
+
+      return response.json()
+    }).then(data => {
+      this.setState({
+        dataLoaded: true,
+        data: data
+      })
+    }).catch(e => {
+      console.error(e)
+      this.setState({
+        dataLoaded: true,
+        data: {
+          results: []
         }
-      ]
-    }
+      })
+    })
   }
 
   render () {
@@ -81,9 +108,107 @@ class PostTable extends React.Component {
 
 const domContainer = document.getElementById('react_root')
 ReactDOM.render(
-  React.createElement(PostTable),
+  React.createElement(PostTable, {url: postListUrl}),
   domContainer
-)
+);
+
+
+// // In order for the child components to trigger a refresh on the parent, they’ll need to call parent methods. 
+// // Parent methods can actually be passed to the child components as properties. 
+// // Example:
+// class ChildButton extends React.Component {
+//   render () {
+//     return <button onClick={ () => { this.props.parentCallback('foo') } }>Click Me</button>
+//   }
+// }
+
+// class ParentContainer extends React.Component {
+//   aCallback(val) {
+//     // will log 'foo' when child is clicked
+//     console.log(val)
+//   }
+
+//   render () {
+//     return <div>
+//       <ChildButton parentCallback={ (arg) => { this.aCallback(arg) } } />
+//     </div>
+//   }
+// }
+// // ReactDOM.render(
+// //   React.createElement(ParentContainer),
+// //   domContainer
+// // );
+
+
+//// Fetch example (post):
+// fetch('/api/v1/posts/', {
+//   method: 'POST',
+//   body: data
+// })
+//// Fetch() return a Promise, json() also return a promise. -> Then... then:
+
+// fetch('/api/v1/posts/').then(response => {        // page 1 if paginated
+//   return response.json()
+// }).then(data  => {
+//   // do something with data, for example
+//   console.log(data)
+// }).catch(e => {                           //will catch exceptions raised either during the response handling or JSON decode
+//   console.error(e)
+// })
+// // Above version will always attempt to decode JSON from the response, even if the response is an error status. 500 -> JSON fail -> real reason = ?
+// // Fixed:
+// fetch('/api/v1/posts/').then(response => {
+//   if (response.status !== 200) {
+//     throw new Error('Invalid status from server: ' + response.statusText)
+//   }
+//   return response.json()
+// }).then(data  => {
+//   // do something with data, for example
+//   console.log(data)
+// }).catch(e => {
+//   console.error(e)
+// })
+
+// ['/api/v1/posts/', '/', '/abadurl/'].forEach(url => {  //ok, JSON.parse error, 404 (async, can be in another order)
+//   fetch(url).then(response => {
+//     if (response.status !== 200) {
+//       throw new Error('Invalid status from server: ' + response.statusText)
+//     }
+
+//     return response.json()
+//   }).then(data => {
+//     // do something with data, for example
+//     console.log(data)
+//   }).catch(e => {
+//     console.error(e)
+//   })
+// })
+
+
+//// JS Exceptions: 
+//// In Python:
+// try:
+//     raise Exception("Something went wrong")
+// except TypeError as e:
+//     print("Got type error", e)
+// except Exception as e:
+//     print("Got Exception", e)
+// finally:
+//     print("This is always called")
+//// JS Equvialent:
+// try {
+//   throw new Error('Something went wrong')
+// } catch(e) {
+//   if (e instanceof TypeError) {
+//     console.log('Got type error')
+//     console.log(e)
+//   } else {
+//     console.log('Got Exception')
+//     console.log(e)
+//   }
+// } finally {
+//   console.log('This is always called')
+// }
 
 
 // class ClickButton extends React.Component {
